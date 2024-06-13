@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProfileCell" id="4bv-My-sRQ" customClass="ProfileCell" customModule="TravelApp" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="272" height="93"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="KHn-LN-nsm">
+                <rect key="frame" x="0.0" y="0.0" width="272" height="93"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="text" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BdO-NS-iOp">
+                        <rect key="frame" x="24" y="25" width="224" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" systemColor="systemGrayColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AvT-rB-iZ8">
+                        <rect key="frame" x="224" y="2.6666666666666661" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="AvT-rB-iZ8" secondAttribute="height" multiplier="1:1" id="hZA-3y-7Gh"/>
+                            <constraint firstAttribute="width" constant="24" id="jCg-jI-bn2"/>
+                        </constraints>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" image="pencil" catalog="system"/>
+                        <connections>
+                            <action selector="editButtonTapped:" destination="4bv-My-sRQ" eventType="touchUpInside" id="o5q-iI-hlU"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSh-tc-jeJ">
+                        <rect key="frame" x="24" y="4" width="192" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="OSh-tc-jeJ" firstAttribute="top" secondItem="KHn-LN-nsm" secondAttribute="top" constant="4" id="91w-Uj-Nj4"/>
+                    <constraint firstItem="BdO-NS-iOp" firstAttribute="leading" secondItem="OSh-tc-jeJ" secondAttribute="leading" id="AEH-KY-JWF"/>
+                    <constraint firstItem="AvT-rB-iZ8" firstAttribute="leading" secondItem="OSh-tc-jeJ" secondAttribute="trailing" constant="8" id="Vjr-O9-tF3"/>
+                    <constraint firstAttribute="trailing" secondItem="BdO-NS-iOp" secondAttribute="trailing" constant="24" id="WxO-bN-O0M"/>
+                    <constraint firstItem="OSh-tc-jeJ" firstAttribute="leading" secondItem="KHn-LN-nsm" secondAttribute="leading" constant="24" id="Ycn-my-ZpW"/>
+                    <constraint firstItem="AvT-rB-iZ8" firstAttribute="centerY" secondItem="OSh-tc-jeJ" secondAttribute="centerY" id="c5s-ME-AhB"/>
+                    <constraint firstAttribute="trailing" secondItem="AvT-rB-iZ8" secondAttribute="trailing" constant="24" id="cGe-VY-4Z2"/>
+                    <constraint firstItem="BdO-NS-iOp" firstAttribute="top" secondItem="OSh-tc-jeJ" secondAttribute="bottom" id="wnE-RA-u4z"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <size key="customSize" width="272" height="93"/>
+            <connections>
+                <outlet property="descriptionLabel" destination="BdO-NS-iOp" id="LKi-dT-CsK"/>
+                <outlet property="editButton" destination="AvT-rB-iZ8" id="Qdw-SL-bNH"/>
+                <outlet property="nameLabel" destination="OSh-tc-jeJ" id="cZl-1h-vSe"/>
+            </connections>
+            <point key="canvasLocation" x="108.3969465648855" y="2.4647887323943665"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="pencil" catalog="system" width="128" height="113"/>
+        <systemColor name="systemGrayColor">
+            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
