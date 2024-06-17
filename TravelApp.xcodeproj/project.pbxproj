@@ -23,6 +23,11 @@
 		1798C3752C1B550700689163 /* ProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1798C3742C1B550700689163 /* ProfileCell.xib */; };
 		1798C3772C1B5D9900689163 /* SeeMoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1798C3762C1B5D9900689163 /* SeeMoreCell.swift */; };
 		1798C3792C1B5DC600689163 /* SeeMoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1798C3782C1B5DC600689163 /* SeeMoreCell.xib */; };
+		1798C37B2C1C5A9400689163 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1798C37A2C1C5A9400689163 /* ViewModel.swift */; };
+		1798C37D2C1C6AB300689163 /* EarthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1798C37C2C1C6AB300689163 /* EarthViewController.swift */; };
+		1798C37F2C1F271D00689163 /* CountryAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1798C37E2C1F271D00689163 /* CountryAnnotation.swift */; };
+		17C01C222C20637600E800A1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C01C212C20637600E800A1 /* Extensions.swift */; };
+		17C01C242C20643A00E800A1 /* BaseCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C01C232C20643A00E800A1 /* BaseCollectionCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +49,11 @@
 		1798C3742C1B550700689163 /* ProfileCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileCell.xib; sourceTree = "<group>"; };
 		1798C3762C1B5D9900689163 /* SeeMoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeMoreCell.swift; sourceTree = "<group>"; };
 		1798C3782C1B5DC600689163 /* SeeMoreCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeeMoreCell.xib; sourceTree = "<group>"; };
+		1798C37A2C1C5A9400689163 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		1798C37C2C1C6AB300689163 /* EarthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthViewController.swift; sourceTree = "<group>"; };
+		1798C37E2C1F271D00689163 /* CountryAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryAnnotation.swift; sourceTree = "<group>"; };
+		17C01C212C20637600E800A1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		17C01C232C20643A00E800A1 /* BaseCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,9 +86,13 @@
 		1798C3502C1B388E00689163 /* TravelApp */ = {
 			isa = PBXGroup;
 			children = (
+				17C01C202C20635A00E800A1 /* Extensions */,
 				1798C3512C1B388E00689163 /* AppDelegate.swift */,
 				1798C3532C1B388E00689163 /* SceneDelegate.swift */,
 				1798C3552C1B388E00689163 /* ViewController.swift */,
+				1798C37C2C1C6AB300689163 /* EarthViewController.swift */,
+				1798C37E2C1F271D00689163 /* CountryAnnotation.swift */,
+				1798C37A2C1C5A9400689163 /* ViewModel.swift */,
 				1798C3572C1B388E00689163 /* Main.storyboard */,
 				1798C3692C1B414000689163 /* Cells */,
 				1798C35A2C1B389000689163 /* Assets.xcassets */,
@@ -101,8 +115,17 @@
 				1798C3742C1B550700689163 /* ProfileCell.xib */,
 				1798C3762C1B5D9900689163 /* SeeMoreCell.swift */,
 				1798C3782C1B5DC600689163 /* SeeMoreCell.xib */,
+				17C01C232C20643A00E800A1 /* BaseCollectionCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		17C01C202C20635A00E800A1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				17C01C212C20637600E800A1 /* Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,9 +205,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1798C3562C1B388E00689163 /* ViewController.swift in Sources */,
+				1798C37D2C1C6AB300689163 /* EarthViewController.swift in Sources */,
+				1798C37B2C1C5A9400689163 /* ViewModel.swift in Sources */,
+				1798C37F2C1F271D00689163 /* CountryAnnotation.swift in Sources */,
 				1798C3522C1B388E00689163 /* AppDelegate.swift in Sources */,
+				17C01C242C20643A00E800A1 /* BaseCollectionCell.swift in Sources */,
 				1798C36B2C1B46A500689163 /* CountryCell.swift in Sources */,
 				1798C3672C1B3EE700689163 /* ShortInfoCell.swift in Sources */,
+				17C01C222C20637600E800A1 /* Extensions.swift in Sources */,
 				1798C3772C1B5D9900689163 /* SeeMoreCell.swift in Sources */,
 				1798C36F2C1B508E00689163 /* HeaderCell.swift in Sources */,
 				1798C3542C1B388E00689163 /* SceneDelegate.swift in Sources */,
