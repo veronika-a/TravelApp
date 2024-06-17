@@ -23,6 +23,17 @@ class ViewModel {
   var profileName: String = "John Doe"
   var profileDescription: String = "Globe-trotter, fearless adventurer, cultural enthusiast, storyteller"
   
+  func removeCountry(name: String, fromSection section: ViewController.SectionType) {
+      if section == .pastCountries {
+        if let index = visitedCountries.firstIndex(where: { $0.0 == name }) {
+          visitedCountries.remove(at: index)
+        }
+      } else if section == .futureCountries {
+        if let index = bucketListCountries.firstIndex(where: { $0.0 == name }) {
+          bucketListCountries.remove(at: index)
+        }
+      }
+    }
   
   init() {  }
 }

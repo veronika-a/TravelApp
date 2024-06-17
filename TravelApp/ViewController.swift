@@ -162,15 +162,53 @@ class ViewController: UIViewController {
         viewModel.visitedCountries.insert(newCountry, at: 0)
         addAnnotations(for: [newCountry], check: true)
         print("Visited Country added: \(newCountry)")
+      } else {
+        showAlertForDuplicateCountry(name: newCountry.0)
       }
     } else {
       if viewModel.bucketListCountries.first(where: {$0.0 == newCountry.0}) == nil {
         viewModel.bucketListCountries.insert(newCountry, at: 0)
         addAnnotations(for: [newCountry], check: false)
         print("Bucket Country added: \(newCountry)")
+      } else {
+        showAlertForDuplicateCountry(name: newCountry.0)
       }
     }
     collectionView?.reloadSections(IndexSet(integer: section))
+  }
+  
+  func removeCountry(name: String, fromSection section: Int) {
+    let sectionType = SectionType(rawValue: section)!
+    viewModel.removeCountry(name: name, fromSection: sectionType)
+    removeAnnotation(for: name)
+    collectionView?.reloadSections(IndexSet(integer: section))
+  }
+
+  func removeAnnotation(for country: String) {
+    if let annotation = annotations[country] {
+      mapView.removeAnnotation(annotation)
+      annotations.removeValue(forKey: country)
+    }
+  }
+  
+  func showAlertForDuplicateCountry(name: String) {
+     let alert = UIAlertController(title: "Duplicate Country", message: "The country \(name) is already in the list.", preferredStyle: .alert)
+     let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+     alert.addAction(okAction)
+     present(alert, animated: true, completion: nil)
+   }
+  
+  func showDeleteConfirmationAlert(for country: String, inSection section: Int) {
+    let alertController = UIAlertController(title: "Delete Country", message: "Are you sure you want to delete \(country) from the list?", preferredStyle: .alert)
+    let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
+      self.removeCountry(name: country, fromSection: section)
+    }
+    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+    
+    alertController.addAction(deleteAction)
+    alertController.addAction(cancelAction)
+    
+    present(alertController, animated: true, completion: nil)
   }
   
   func showAddCountryAlert(forSection section: Int) {
@@ -319,7 +357,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
       } else if SectionType(rawValue: indexPath.section) == .futureCountries && (!isExpanded[1] && indexPath.item == 3 || isExpanded[1] && indexPath.item == viewModel.bucketListCountries.count + 1) {
         isExpanded[1].toggle()
         collectionView.reloadSections(IndexSet(integer: indexPath.section))
-        
+      } else {
+        let country = SectionType(rawValue: indexPath.section) == .pastCountries ? viewModel.visitedCountries[indexPath.item - 1] : viewModel.bucketListCountries[indexPath.item - 1]
+             showDeleteConfirmationAlert(for: country.0, inSection: indexPath.section)
       }
     default:
       break
