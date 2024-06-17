@@ -3,8 +3,9 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -36,7 +37,7 @@
                                         </connections>
                                     </collectionView>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" name="SystemBg"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="T7U-wv-wdD" secondAttribute="bottom" id="0p8-mQ-Gtf"/>
                                     <constraint firstAttribute="trailing" secondItem="T7U-wv-wdD" secondAttribute="trailing" id="3Rv-4a-Lkd"/>
@@ -45,43 +46,69 @@
                                     <constraint firstItem="T7U-wv-wdD" firstAttribute="top" secondItem="cEh-Sq-Prt" secondAttribute="top" id="yWl-03-IUi"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ik5-CM-r5e">
-                                <rect key="frame" x="16" y="78" width="19.666666666666671" height="18.333333333333329"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ik5-CM-r5e">
+                                <rect key="frame" x="16" y="75" width="32" height="32"/>
+                                <color key="backgroundColor" name="SystemBg"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="ik5-CM-r5e" secondAttribute="height" multiplier="1:1" id="0qc-2z-fBR"/>
+                                    <constraint firstAttribute="width" constant="32" id="JCx-dP-2pY"/>
+                                </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" backgroundImage="arrow.backward" catalog="system">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="Subtract">
+                                    <color key="titleColor" name="LabelPrimary"/>
                                 </state>
-                                <connections>
-                                    <action selector="back:" destination="0qA-pF-p18" eventType="touchUpInside" id="nmU-q9-Zel"/>
-                                </connections>
                             </button>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u0g-R1-Djj">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="352"/>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ProfileImg" translatesAutoresizingMaskIntoConstraints="NO" id="izR-jK-MCy">
+                                <rect key="frame" x="20" y="332" width="80" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="YDz-7O-u3V"/>
+                                    <constraint firstAttribute="width" constant="80" id="vCQ-Gf-5Tl"/>
+                                    <constraint firstAttribute="width" secondItem="izR-jK-MCy" secondAttribute="height" multiplier="1:1" id="wWb-zi-aci"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="d2G-kb-IxG"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="cEh-Sq-Prt" firstAttribute="leading" secondItem="d2G-kb-IxG" secondAttribute="leading" id="6TJ-hZ-u9H"/>
+                            <constraint firstItem="u0g-R1-Djj" firstAttribute="leading" secondItem="d2G-kb-IxG" secondAttribute="leading" id="LvR-a2-dLq"/>
                             <constraint firstItem="ik5-CM-r5e" firstAttribute="top" secondItem="d2G-kb-IxG" secondAttribute="top" constant="16" id="QCO-Cx-LXk"/>
+                            <constraint firstItem="cEh-Sq-Prt" firstAttribute="top" secondItem="u0g-R1-Djj" secondAttribute="bottom" id="XvC-BK-Lyb"/>
                             <constraint firstAttribute="trailing" secondItem="cEh-Sq-Prt" secondAttribute="trailing" id="c1X-zy-y7B"/>
                             <constraint firstAttribute="bottom" secondItem="cEh-Sq-Prt" secondAttribute="bottom" id="dYy-ZS-0U3"/>
+                            <constraint firstItem="izR-jK-MCy" firstAttribute="leading" secondItem="d2G-kb-IxG" secondAttribute="leading" constant="20" id="hEI-Q7-bPu"/>
                             <constraint firstItem="ik5-CM-r5e" firstAttribute="leading" secondItem="d2G-kb-IxG" secondAttribute="leading" constant="16" id="lzH-wf-uB3"/>
+                            <constraint firstAttribute="top" secondItem="u0g-R1-Djj" secondAttribute="top" id="pLh-60-6ZR"/>
+                            <constraint firstItem="izR-jK-MCy" firstAttribute="top" secondItem="T7U-wv-wdD" secondAttribute="top" constant="-20" id="xZ2-bI-A2w"/>
+                            <constraint firstItem="u0g-R1-Djj" firstAttribute="trailing" secondItem="d2G-kb-IxG" secondAttribute="trailing" id="zoM-TI-1Pg"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="ik5-CM-r5e" id="5Sd-AC-l1R"/>
                         <outlet property="bottomSheetView" destination="cEh-Sq-Prt" id="Ohb-FF-cUG"/>
                         <outlet property="bottomViewHeightConstraint" destination="KZm-L6-0cs" id="vBu-NV-7OY"/>
                         <outlet property="collectionView" destination="T7U-wv-wdD" id="d9l-hq-scg"/>
+                        <outlet property="mapView" destination="u0g-R1-Djj" id="Xqd-0f-62y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Glm-4d-DM9" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="228" y="8"/>
+            <point key="canvasLocation" x="226.71755725190837" y="7.746478873239437"/>
         </scene>
     </scenes>
     <resources>
-        <image name="arrow.backward" catalog="system" width="128" height="95"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <image name="ProfileImg" width="88" height="88"/>
+        <image name="Subtract" width="8" height="12"/>
+        <namedColor name="LabelPrimary">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="SystemBg">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

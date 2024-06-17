@@ -1,82 +1,19 @@
 import UIKit
-
-// Screen width.
-public var screenWidth: CGFloat {
-  return UIScreen.main.bounds.width
-}
-
-enum BottomSheetPosition: Equatable {
-  case top
-  case bottom
-  case current(CGFloat)
-}
-
-enum AnimationTime: TimeInterval {
-  case slowest = 1.0
-  case extremelySlow = 0.9
-  case verySlow = 0.8
-  case quiteSlow = 0.7
-  case slow = 0.6
-  case `default` = 0.5
-  case fast = 0.4
-  case quiteFast = 0.3
-  case veryFast = 0.2
-  case extremelyFast = 0.1
-  case fastest = 0.0
-}
-
-struct CardViewController {
-  static let bottomSheetMaxHeightOffset: CGFloat = 26.0
-  static let cardContainerAspectRatio: CGFloat = 0.66
-  static let pageControlHeight: CGFloat = 28.0
-  static let pageIndicatorHeight: CGFloat = 40.0
-  static let buttonsViewHeight: CGFloat = 111.0
-  
-}
-
-class ViewModel {
-  
-  //weak var appCoordinator : InitialCoordinator!
-  //var model: DataModel
-  
-  var profileName: String = "John Doe"
-  var profileDescription: String = "Globe-trotter, fearless adventurer, cultural enthusiast, storyteller"
-    
-  
-  init() {  }
-  
-//  func goToHomePage(){
-//    appCoordinator.backToHomePage()
-//  }
-  
-}
-
+import MapKit
+import CoreLocation
 
 class ViewController: UIViewController {
-  
-  var visitedCountries = [
-         ("Ukraine", "ukraine_flag"),
-         ("Mexico", "mexico_flag"),
-         ("Chile", "chile_flag"),
-         ("France", "france_flag"),
-         ("Germany", "germany_flag")
-     ]
-     
-  var bucketListCountries = [
-         ("Italy", "italy_flag"),
-         ("Peru", "peru_flag"),
-         ("United States", "usa_flag"),
-         ("Japan", "japan_flag"),
-         ("Australia", "australia_flag")
-     ]
-     
   
   enum SectionType: Int, CaseIterable {
     case summary, shortInfo, pastCountries, futureCountries
   }
-
+  
+  @IBOutlet weak var mapView: MKMapView!
+  var annotations: [String: MKAnnotation] = [:]
+  let geocoder = CLGeocoder()
+  
   var viewModel : ViewModel!
-  var isExpanded: [Bool] = [false, false] // for openning sections
+  var isExpanded: [Bool] = [false, false] // for opening sections
   
   private var currentBottomSheetPosition: BottomSheetPosition = .bottom
   private var bottomSheetMaxHeight: CGFloat = .zero
@@ -86,11 +23,22 @@ class ViewController: UIViewController {
   private var currentPosition: BottomSheetPosition = .bottom
   
   @IBOutlet weak private var collectionView: UICollectionView?
-  @IBOutlet weak private var bottomSheetView: UIView!
-  @IBOutlet private var bottomViewHeightConstraint: NSLayoutConstraint!
-
+  @IBOutlet weak private var backButton: UIButton?
+  @IBOutlet weak private var bottomSheetView: UIView?
+  @IBOutlet weak private var bottomViewHeightConstraint: NSLayoutConstraint!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    mapView.delegate = self
+    
+    // Setting the initial view of the map as a globe
+    mapView.mapType = .hybridFlyover
+    mapView.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(latitude: 0, longitude: 0), fromDistance: 20000000, pitch: 0, heading: 0)
+    
+    // Adding a long press recognizer to set markers
+    let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+    mapView.addGestureRecognizer(longPressRecognizer)
     
     collectionView?.delegate = self
     collectionView?.dataSource = self
@@ -99,11 +47,13 @@ class ViewController: UIViewController {
     collectionView?.registerNib(HeaderCell.self)
     collectionView?.registerNib(ProfileCell.self)
     collectionView?.registerNib(SeeMoreCell.self)
-
-    bottomSheetView.layer.cornerRadius = 16
+    
+    bottomSheetView?.layer.cornerRadius = 16
+    backButton?.roundCorners(radius: 16)
+    
     let gesture = UIPanGestureRecognizer(target: self, action: #selector(bottomSheetPanGesture))
     gesture.delegate = self
-    bottomSheetView.addGestureRecognizer(gesture)
+    bottomSheetView?.addGestureRecognizer(gesture)
     
     collectionView?.isUserInteractionEnabled = false
     let scenes = UIApplication.shared.connectedScenes
@@ -116,7 +66,10 @@ class ViewController: UIViewController {
     let viewsOffset = CardViewController.pageControlHeight + CardViewController.buttonsViewHeight
     bottomSheetMinHeight = availableHeight - cardOffset - viewsOffset
     currentHeight = bottomSheetMinHeight
-
+    
+    // Add annotations for visited and bucket list countries
+    addAnnotations(for: viewModel.visitedCountries)
+    addAnnotations(for: viewModel.bucketListCountries, check: false)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -125,7 +78,6 @@ class ViewController: UIViewController {
     guard currentBottomSheetPosition == .bottom else { return }
     updateBottomSheetPosition(position: .current(bottomSheetMinHeight))
   }
-
   
   @objc private func bottomSheetPanGesture(recognizer: UIPanGestureRecognizer) {
     let translation = recognizer.translation(in: view)
@@ -171,10 +123,6 @@ class ViewController: UIViewController {
     }
   }
   
-//  private func updateDependentViews(dependOn newHeight: CGFloat, animated: Bool) {
-//    let basePercent = calculateScrollPercent(dependOn: newHeight)
-//  }
-  
   private func calculateScrollPercent(dependOn newHeight: CGFloat, topInset: CGFloat = .zero) -> CGFloat {
     let maxValue = bottomSheetMaxHeight - topInset
     let minValue = bottomSheetMinHeight
@@ -182,8 +130,8 @@ class ViewController: UIViewController {
     
     var currentPercent: CGFloat = 1.0
     let diff = maxValue - minValue
-    let wightedNewHeight = currentValue - minValue
-    currentPercent = (wightedNewHeight * 100) / diff
+    let weightedNewHeight = currentValue - minValue
+    currentPercent = (weightedNewHeight * 100) / diff
     return currentPercent
   }
   
@@ -207,67 +155,87 @@ class ViewController: UIViewController {
     return cell
   }
   
-  @IBAction func back(_ sender: Any) {
-    navigationController?.popViewController(animated: true)
-  }
-  
-  func populate() {
-    
-  }
-  
-  func addNewCountry(toSection section: Int) {
-    let newCountry = ("New Country", "new_country_flag")
+  func addNewCountry(name: String, flag: String, toSection section: Int) {
+    let newCountry = (name, flag)
     if SectionType(rawValue: section) == .pastCountries {
-      visitedCountries.insert(newCountry, at: 0)
+      if viewModel.visitedCountries.first(where: {$0.0 == newCountry.0}) == nil {
+        viewModel.visitedCountries.insert(newCountry, at: 0)
+        addAnnotations(for: [newCountry], check: true)
+        print("Visited Country added: \(newCountry)")
+      }
     } else {
-      bucketListCountries.insert(newCountry, at: 0)
+      if viewModel.bucketListCountries.first(where: {$0.0 == newCountry.0}) == nil {
+        viewModel.bucketListCountries.insert(newCountry, at: 0)
+        addAnnotations(for: [newCountry], check: false)
+        print("Bucket Country added: \(newCountry)")
+      }
     }
     collectionView?.reloadSections(IndexSet(integer: section))
   }
   
+  func showAddCountryAlert(forSection section: Int) {
+    let alertController = UIAlertController(title: "Add New Country", message: "\n\n\n\n\n\n", preferredStyle: .alert)
+    
+    let pickerView = UIPickerView(frame: CGRect(x: 0, y: 50, width: 270, height: 140))
+    pickerView.dataSource = self
+    pickerView.delegate = self
+    
+    alertController.view.addSubview(pickerView)
+    
+    let addAction = UIAlertAction(title: "Add", style: .default) { _ in
+      let selectedRow = pickerView.selectedRow(inComponent: 0)
+      let selectedCountry = Countries.allCountries[selectedRow]
+      self.addNewCountry(name: selectedCountry.0, flag: selectedCountry.1, toSection: section)
+    }
+    
+    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+    
+    alertController.addAction(addAction)
+    alertController.addAction(cancelAction)
+    
+    present(alertController, animated: true, completion: nil)
+  }
   
   func editProfile() {
-          let alertController = UIAlertController(title: "Edit Profile", message: nil, preferredStyle: .alert)
-          
-          alertController.addTextField { (textField) in
-            textField.text = self.viewModel.profileName
-          }
-          
-          alertController.addTextField { (textField) in
-            textField.text = self.viewModel.profileDescription
-          }
-          
-          let saveAction = UIAlertAction(title: "Save", style: .default) { (_) in
-              if let nameField = alertController.textFields?[0], let descriptionField = alertController.textFields?[1] {
-                self.viewModel.profileName = nameField.text ?? self.viewModel.profileName
-                self.viewModel.profileDescription = descriptionField.text ?? self.viewModel.profileDescription
-                self.collectionView?.reloadData()
-              }
-          }
-          
-          let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-          
-          alertController.addAction(saveAction)
-          alertController.addAction(cancelAction)
-          
-          present(alertController, animated: true, completion: nil)
+    let alertController = UIAlertController(title: "Edit Profile", message: nil, preferredStyle: .alert)
+    
+    alertController.addTextField { (textField) in
+      textField.text = self.viewModel.profileName
+    }
+    
+    alertController.addTextField { (textField) in
+      textField.text = self.viewModel.profileDescription
+    }
+    
+    let saveAction = UIAlertAction(title: "Save", style: .default) { (_) in
+      if let nameField = alertController.textFields?[0], let descriptionField = alertController.textFields?[1] {
+        self.viewModel.profileName = nameField.text ?? self.viewModel.profileName
+        self.viewModel.profileDescription = descriptionField.text ?? self.viewModel.profileDescription
+        self.collectionView?.reloadData()
       }
-
+    }
+    
+    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+    
+    alertController.addAction(saveAction)
+    alertController.addAction(cancelAction)
+    
+    present(alertController, animated: true, completion: nil)
+  }
 }
 
-//MARK: - DELEGATE METHODS
+// MARK: - DELEGATE METHODS
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     switch SectionType(rawValue: section) {
     case .pastCountries:
-      return isExpanded[0] ? visitedCountries.count + 2 : 4
+      return isExpanded[0] ? viewModel.visitedCountries.count + 2 : 4
     case .futureCountries:
-      return isExpanded[1] ? bucketListCountries.count + 2 : 4
+      return isExpanded[1] ? viewModel.bucketListCountries.count + 2 : 4
     default:
       return 1
     }
-    
   }
   
   func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -277,46 +245,32 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     switch SectionType(rawValue: indexPath.section)! {
     case .pastCountries, .futureCountries:
-//      if indexPath.item == 0 {
-//        let cell = self.configure(cellType: HeaderCell.self, for: indexPath)
-//        cell.titleLabel.text = SectionType(rawValue: indexPath.section) == .pastCountries ? "I've been to" : "My bucket list"
-//        cell.addButton.setTitle("Add country", for: .normal)
-//        return cell
-//      } else {
-//        let cell = self.configure(cellType: CountryCell.self, for: indexPath)
-//        let country = SectionType(rawValue: indexPath.section) == .pastCountries ? visitedCountries[indexPath.item - 1] : bucketListCountries[indexPath.item - 1]
-//        
-//        cell.countryNameLabel.text = country.0
-//        cell.flagImageView.image = UIImage(named: country.1)
-//        
-//        return cell
-//      }
-//      
-      
       if indexPath.item == 0 {
         let cell = self.configure(cellType: HeaderCell.self, for: indexPath)
-        cell.titleLabel.text = SectionType(rawValue: indexPath.section) == .pastCountries ? "I've been to" : "My bucket list"
-        cell.addButton.setTitle("Add country", for: .normal)
+        cell.populate(
+          titleText: SectionType(rawValue: indexPath.section) == .pastCountries ? "I've been to" : "My bucket list")
+        cell.addButtonAction = {
+          self.showAddCountryAlert(forSection: indexPath.section)
+        }
         return cell
       } else if SectionType(rawValue: indexPath.section) == .pastCountries {
-        if !isExpanded[0] && indexPath.item == 3 || isExpanded[0] && indexPath.item == visitedCountries.count + 1 {
+        if !isExpanded[0] && indexPath.item == 3 || isExpanded[0] && indexPath.item == viewModel.visitedCountries.count + 1 {
           let cell = self.configure(cellType: SeeMoreCell.self, for: indexPath)
-          cell.seeMoreLabel.text = isExpanded[0] ? "See less" : "See 5 more"
+          cell.seeMoreLabel.text = isExpanded[0] ? "See less" : "See \(viewModel.visitedCountries.count - 2) more"
           return cell
         }
       } else {
-        if (!isExpanded[1] && indexPath.item == 3) || (isExpanded[1] && indexPath.item == bucketListCountries.count + 1) {
+        if (!isExpanded[1] && indexPath.item == 3) || (isExpanded[1] && indexPath.item == viewModel.bucketListCountries.count + 1) {
           let cell = self.configure(cellType: SeeMoreCell.self, for: indexPath)
-          cell.seeMoreLabel.text = isExpanded[1] ? "See less" : "See 5 more"
+          cell.seeMoreLabel.text = isExpanded[1] ? "See less" : "See \(viewModel.bucketListCountries.count - 2) more"
           return cell
         }
       }
       
       let cell = self.configure(cellType: CountryCell.self, for: indexPath)
-      let country = SectionType(rawValue: indexPath.section) == .pastCountries ? visitedCountries[indexPath.item - 1] : bucketListCountries[indexPath.item - 1]
+      let country = SectionType(rawValue: indexPath.section) == .pastCountries ? viewModel.visitedCountries[indexPath.item - 1] : viewModel.bucketListCountries[indexPath.item - 1]
       
-      cell.countryNameLabel.text = country.0
-      cell.flagImageView.image = UIImage(named: country.1)
+      cell.populate(countryName: country.0, flag: country.1)
       
       return cell
     case .summary:
@@ -334,14 +288,24 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let width = screenWidth
+    let width = collectionView.frame.width - 48
     switch SectionType(rawValue: indexPath.section)! {
     case .futureCountries, .pastCountries:
-      return CGSize(width: collectionView.frame.width - 20, height: 50)
+      if indexPath.item == 0 {
+        return CGSize(
+          width: width,
+          height: 64
+        )
+      } else {
+        return CGSize(
+          width: width,
+          height: 48
+        )
+      }
     default:
       return CGSize(
         width: width,
-        height: 81
+        height: 92
       )
     }
   }
@@ -349,15 +313,13 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     switch SectionType(rawValue: indexPath.section)! {
     case .pastCountries, .futureCountries:
-      if indexPath.item == 0 {
-        addNewCountry(toSection: indexPath.section)
-      } else if SectionType(rawValue: indexPath.section) == .pastCountries && (!isExpanded[0] && indexPath.item == 3 || isExpanded[0] && indexPath.item == visitedCountries.count + 1) {
+      if SectionType(rawValue: indexPath.section) == .pastCountries && (!isExpanded[0] && indexPath.item == 3 || isExpanded[0] && indexPath.item == viewModel.visitedCountries.count + 1) {
         isExpanded[0].toggle()
         collectionView.reloadSections(IndexSet(integer: indexPath.section))
-      } else if SectionType(rawValue: indexPath.section) == .futureCountries && (!isExpanded[1] && indexPath.item == 3 || isExpanded[1] && indexPath.item == bucketListCountries.count + 1) {
+      } else if SectionType(rawValue: indexPath.section) == .futureCountries && (!isExpanded[1] && indexPath.item == 3 || isExpanded[1] && indexPath.item == viewModel.bucketListCountries.count + 1) {
         isExpanded[1].toggle()
         collectionView.reloadSections(IndexSet(integer: indexPath.section))
-
+        
       }
     default:
       break
@@ -378,32 +340,116 @@ extension ViewController: UIGestureRecognizerDelegate {
   }
 }
 
-open class BaseCollectionCell: UICollectionViewCell {
-  static var identifier: String { return String(describing: self) }
-  static var nib: UINib { return UINib(nibName: identifier, bundle: nil) }
-
-  public func setupLayout() {}
+// MARK: - Picker
+extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
   
-  public func setup() {}
-    
-  public override init(frame: CGRect) {
-    super.init(frame: frame)
-    setupLayout()
-    setup()
+  func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    return 1
   }
   
-  required public init?(coder: NSCoder) {
-    super.init(coder: coder)
-    setupLayout()
-    setup()
+  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    return Countries.allCountries.count
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    return Countries.allCountries[row].0
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    // Nothing needed here
   }
   
 }
 
-extension UICollectionView {
-  func registerNib<T: UICollectionViewCell>(_ cellType: T.Type){
-    let nibName = String(describing: cellType)
-    let nib = UINib(nibName: nibName, bundle: nil)
-    register(nib, forCellWithReuseIdentifier: nibName)
+// MARK: - MKMapViewDelegate
+extension ViewController: MKMapViewDelegate {
+  
+  @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+    if gestureRecognizer.state != .began { return }
+    
+    let touchPoint = gestureRecognizer.location(in: mapView)
+    let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+    
+    // Determine the country by coordinates
+    let location = CLLocation(latitude: touchCoordinate.latitude, longitude: touchCoordinate.longitude)
+    geocoder.reverseGeocodeLocation(location) { [weak self] (placemarks, error) in
+      guard let self = self else { return }
+      if let placemark = placemarks?.first, let countryCode = placemark.isoCountryCode {
+        if let country = Countries.countryIdentifiers[countryCode] {
+          print("Country: \(country)")
+          self.findCountryLocation(for: country, isNewAnnotation: true)
+        }
+      }
+    }
   }
+  
+  func findCountryLocation(for country: String, check: Bool = true, isNewAnnotation: Bool) {
+    let searchRequest = MKLocalSearch.Request()
+    searchRequest.naturalLanguageQuery = country
+    
+    let search = MKLocalSearch(request: searchRequest)
+    search.start { (response, error) in
+      guard let response = response, error == nil else {
+        print("Error finding country: \(error?.localizedDescription ?? "Unknown error")")
+        return
+      }
+      
+      if let mapItem = response.mapItems.first {
+        let countryLocation = mapItem.placemark.coordinate
+        
+        if isNewAnnotation {
+          print("Country location addToVisitedCountries \(country): \(country)")
+          self.addToVisitedCountries(country)
+        } else {
+          print("Country location addAnnotation \(country): \(country)")
+          self.addAnnotation(at: countryLocation, title: country, check: check)
+        }
+      }
+    }
+  }
+  
+  func addAnnotation(at coordinate: CLLocationCoordinate2D, title: String, check: Bool) {
+    print("addAnnotation \(title)")
+    if let countryData = Countries.allCountries.first(where: { $0.0 == title }) {
+      let annotation = CountryAnnotation(coordinate: coordinate, title: title, flag: countryData.1, check: check)
+      mapView.addAnnotation(annotation)
+      
+      // Save the annotation to the dictionary
+      annotations[annotation.title ?? ""] = annotation
+    }
+  }
+  
+  func addToVisitedCountries(_ country: String) {
+    print("addToVisitedCountries \(country)")
+    
+    if let countryData = Countries.allCountries.first(where: { $0.0 == country }) {
+      self.addNewCountry(name: countryData.0, flag: countryData.1, toSection: SectionType.pastCountries.rawValue)
+      
+    } else {
+      print("Country \(country) not found in the dictionary.")
+    }
+  }
+  
+  // MKMapViewDelegate method for displaying custom annotations
+  func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    guard let countryAnnotation = annotation as? CountryAnnotation else {
+      return nil
+    }
+    
+    let identifier = "CountryAnnotationView"
+    var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? CountryNameAnnotationView
+    if (annotationView == nil) {
+      annotationView = CountryNameAnnotationView(annotation: countryAnnotation, reuseIdentifier: identifier)
+    } else {
+      annotationView?.annotation = countryAnnotation
+    }
+    return annotationView
+  }
+  
+  func addAnnotations(for countries: [(String, String)], check: Bool = true) {
+    for country in countries {
+      findCountryLocation(for: country.0, check: check, isNewAnnotation: false)
+    }
+  }
+  
 }

@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,15 +18,15 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0O8-MO-f19">
-                        <rect key="frame" x="24" y="36" width="224" height="21"/>
+                        <rect key="frame" x="0.0" y="36" width="272" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
+                        <color key="textColor" name="LabelSecondary"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="0O8-MO-f19" firstAttribute="leading" secondItem="clc-7h-4xz" secondAttribute="leading" constant="24" id="Q9D-Ms-68W"/>
-                    <constraint firstAttribute="trailing" secondItem="0O8-MO-f19" secondAttribute="trailing" constant="24" id="Z5V-0b-Ndg"/>
+                    <constraint firstItem="0O8-MO-f19" firstAttribute="leading" secondItem="clc-7h-4xz" secondAttribute="leading" id="Q9D-Ms-68W"/>
+                    <constraint firstAttribute="trailing" secondItem="0O8-MO-f19" secondAttribute="trailing" id="Z5V-0b-Ndg"/>
                     <constraint firstItem="0O8-MO-f19" firstAttribute="centerY" secondItem="clc-7h-4xz" secondAttribute="centerY" id="cfq-Sc-ngs"/>
                 </constraints>
             </collectionViewCellContentView>
@@ -36,4 +37,9 @@
             <point key="canvasLocation" x="108.3969465648855" y="2.4647887323943665"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <namedColor name="LabelSecondary">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
 </document>

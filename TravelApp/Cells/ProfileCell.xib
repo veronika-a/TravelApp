@@ -3,7 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,38 +18,38 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="text" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BdO-NS-iOp">
-                        <rect key="frame" x="24" y="25" width="224" height="18"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                        <color key="textColor" systemColor="systemGrayColor"/>
+                        <rect key="frame" x="100" y="37" width="172" height="15.666666666666664"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" name="LabelSecondary"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AvT-rB-iZ8">
-                        <rect key="frame" x="224" y="2.6666666666666661" width="24" height="24"/>
+                        <rect key="frame" x="150.33333333333334" y="14.666666666666664" width="24" height="24"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="AvT-rB-iZ8" secondAttribute="height" multiplier="1:1" id="hZA-3y-7Gh"/>
                             <constraint firstAttribute="width" constant="24" id="jCg-jI-bn2"/>
                         </constraints>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                        <state key="normal" image="pencil" catalog="system"/>
+                        <state key="normal" backgroundImage="pencil"/>
                         <connections>
                             <action selector="editButtonTapped:" destination="4bv-My-sRQ" eventType="touchUpInside" id="o5q-iI-hlU"/>
                         </connections>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OSh-tc-jeJ">
-                        <rect key="frame" x="24" y="4" width="192" height="21"/>
+                        <rect key="frame" x="100" y="16" width="42.333333333333343" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
+                        <color key="textColor" name="LabelPrimary"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="OSh-tc-jeJ" firstAttribute="top" secondItem="KHn-LN-nsm" secondAttribute="top" constant="4" id="91w-Uj-Nj4"/>
+                    <constraint firstItem="OSh-tc-jeJ" firstAttribute="top" secondItem="KHn-LN-nsm" secondAttribute="top" constant="16" id="91w-Uj-Nj4"/>
                     <constraint firstItem="BdO-NS-iOp" firstAttribute="leading" secondItem="OSh-tc-jeJ" secondAttribute="leading" id="AEH-KY-JWF"/>
                     <constraint firstItem="AvT-rB-iZ8" firstAttribute="leading" secondItem="OSh-tc-jeJ" secondAttribute="trailing" constant="8" id="Vjr-O9-tF3"/>
-                    <constraint firstAttribute="trailing" secondItem="BdO-NS-iOp" secondAttribute="trailing" constant="24" id="WxO-bN-O0M"/>
-                    <constraint firstItem="OSh-tc-jeJ" firstAttribute="leading" secondItem="KHn-LN-nsm" secondAttribute="leading" constant="24" id="Ycn-my-ZpW"/>
+                    <constraint firstAttribute="trailing" secondItem="BdO-NS-iOp" secondAttribute="trailing" id="WxO-bN-O0M"/>
+                    <constraint firstItem="OSh-tc-jeJ" firstAttribute="leading" secondItem="KHn-LN-nsm" secondAttribute="leading" constant="100" id="Ycn-my-ZpW"/>
                     <constraint firstItem="AvT-rB-iZ8" firstAttribute="centerY" secondItem="OSh-tc-jeJ" secondAttribute="centerY" id="c5s-ME-AhB"/>
-                    <constraint firstAttribute="trailing" secondItem="AvT-rB-iZ8" secondAttribute="trailing" constant="24" id="cGe-VY-4Z2"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="AvT-rB-iZ8" secondAttribute="trailing" id="cGe-VY-4Z2"/>
                     <constraint firstItem="BdO-NS-iOp" firstAttribute="top" secondItem="OSh-tc-jeJ" secondAttribute="bottom" id="wnE-RA-u4z"/>
                 </constraints>
             </collectionViewCellContentView>
@@ -63,9 +63,12 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="pencil" catalog="system" width="128" height="113"/>
-        <systemColor name="systemGrayColor">
-            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
+        <image name="pencil" width="24" height="24"/>
+        <namedColor name="LabelPrimary">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="LabelSecondary">
+            <color red="0.23499999940395355" green="0.23499999940395355" blue="0.2630000114440918" alpha="0.80000001192092896" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>
